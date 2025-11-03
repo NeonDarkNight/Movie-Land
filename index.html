@@ -13,7 +13,7 @@
     />
     <meta name="robots" content="index, follow" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Welcome To ApnaTheatre</title>
+    <title data-i18n="title">Welcome To ApnaTheatre</title>
     <link
       rel="shortcut icon"
       href="./Images/Logo/Title.jpeg"
@@ -35,9 +35,29 @@
     />
 
     <link rel="stylesheet" href="landpage.css" />
+    <style>
+      .lang-select {
+        position: absolute;
+        right: 25px;
+        top: 25px;
+        z-index: 101;
+        background: #fff;
+        border-radius: 5px;
+        padding: 2px 5px;
+        border: 1px solid #bbb;
+        font-size: 15px;
+      }
+    </style>
   </head>
 
   <body id="stop-scrolling">
+    <!-- Dil seçimi -->
+    <select class="lang-select" id="langSwitch">
+      <option value="en">EN</option>
+      <option value="az">AZ</option>
+      <option value="tr">TR</option>
+    </select>
+
     <div class="preloader"></div>
 
     <div class="text-container">
@@ -46,32 +66,31 @@
           ><img class="logo" src="Images/TheaterLogoFinal.png" alt=""
         /></a>
         <div class="intro-container">
-          <h1>WELCOME TO<br /><span>ApnaTheatre</span></h1>
-          <p>Stream your favourite movies online.</p>
+          <h1>
+            <span data-i18n="welcome1">WELCOME TO</span><br />
+            <span>ApnaTheatre</span>
+          </h1>
+          <p data-i18n="stream_favs">Stream your favourite movies online.</p>
         </div>
-        <a href="#" class="button" onclick="myFunction()">Login</a>
+        <a href="#" class="button" onclick="myFunction()" data-i18n="login_btn">Login</a>
       </div>
       <div class="bottom-text-container1">
         <div class="bottom-text-container">
-          <p class="watch">Watch</p>
-          <p class="chill">Chill</p>
-          <p class="repeat">Repeat</p>
+          <p class="watch" data-i18n="watch">Watch</p>
+          <p class="chill" data-i18n="chill">Chill</p>
+          <p class="repeat" data-i18n="repeat">Repeat</p>
         </div>
       </div>
     </div>
 
     <div class="images-container">
       <marquee behavior="alternate" direction="left" scrollamount="8.4">
-        // marquee - it defines a scrolling area in the HTML document that moves
-        across the page any direction.
         <div class="group1">
           <div class="image">
             <img src="./Images/super-girl.jpg" alt="super girl" />
           </div>
           <div class="image">
-            <img src="./Images/tenet.jpg" alt="" /> // The alt attribute
-            specifies an alternate text for an area, if the image cannot be
-            displayed.
+            <img src="./Images/tenet.jpg" alt="" />
           </div>
           <div class="image">
             <img src="./Images/dangal.jpg" alt="" />
@@ -287,6 +306,62 @@
     </div>
 
     <script>
+      // Dil dəyişkənləri
+      const translations = {
+        az: {
+          title: "ApnaTheatre-ə xoş gəlmisiniz",
+          welcome1: "XOŞ GƏLMİSİNİZ",
+          stream_favs: "Ən sevdiyiniz filmləri onlayn izləyin.",
+          login_btn: "Daxil ol",
+          watch: "İzlə",
+          chill: "Dincəl",
+          repeat: "Təkrar et"
+        },
+        tr: {
+          title: "ApnaTheatre'a Hoşgeldiniz",
+          welcome1: "HOŞGELDİNİZ",
+          stream_favs: "Favori filmlerinizi çevrimiçi izleyin.",
+          login_btn: "Giriş Yap",
+          watch: "İzle",
+          chill: "Rahatla",
+          repeat: "Tekrarla"
+        },
+        en: {
+          title: "Welcome To ApnaTheatre",
+          welcome1: "WELCOME TO",
+          stream_favs: "Stream your favourite movies online.",
+          login_btn: "Login",
+          watch: "Watch",
+          chill: "Chill",
+          repeat: "Repeat"
+        }
+      };
+
+      function changeLang(lang) {
+        const dict = translations[lang] || translations.en;
+        document.querySelectorAll("[data-i18n]").forEach(el => {
+          const key = el.getAttribute("data-i18n");
+          if (dict[key]) {
+            el.textContent = dict[key];
+          }
+        });
+        // Dinamik başlıq
+        document.title = dict.title;
+      }
+
+      document.getElementById("langSwitch").addEventListener("change", function() {
+        changeLang(this.value);
+        // Seçimi yadda saxlamaq üçün localStorage istifadə oluna bilər
+        localStorage.setItem('lang', this.value);
+      });
+
+      // Sayt açılarkən son seçilmiş dili yüklə
+      document.addEventListener("DOMContentLoaded", () => {
+        let lang = localStorage.getItem('lang') || 'en';
+        document.getElementById("langSwitch").value = lang;
+        changeLang(lang);
+      });
+
       function myFunction() {
         location.replace("login.html");
       }
@@ -294,12 +369,10 @@
 
     <script>
       function preloaderFadeOutInit() {
-        $(".preloader").fadeOut("slow"); // will first fade out the loading animation
-        $("body").attr("id", ""); // will fade out the whole DIV that covers the website.
+        $(".preloader").fadeOut("slow");
+        $("body").attr("id", "");
       }
-      // Window load function
       jQuery(window).on("load", function () {
-        // makes sure the whole site is loaded
         (function ($) {
           preloaderFadeOutInit();
         })(jQuery);
